@@ -1,3 +1,3 @@
 module github.com/openshift/windows-machine-config-operator
 
-go 1.11
+go 1.12

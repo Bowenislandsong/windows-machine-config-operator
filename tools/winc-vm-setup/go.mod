@@ -1,6 +1,6 @@
 module github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup
 
-go 1.11
+go 1.12
 
 require (
 	github.com/aws/aws-sdk-go v1.23.2

@@ -2,10 +2,14 @@ package main
 
 import (
 	"flag"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/config"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/ec2_instances"
+	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/cloudprovider/aws"
+	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/openshiftcluster"
 	"log"
 	"os"
+)
+
+const (
+	installerFileName = "windows-node-installer.json"
 )
 
 func main() {
@@ -34,13 +38,15 @@ func main() {
 		if err != nil {
 			println("Please get help with 'create -h'.")
 		}
-		sessAWS := config.AWSConfigSess(credPath, credAccount, region)
-		oc, err := config.OpenShiftConfig(kubeConfigPath)
+
+		// Create node instance on selected platform
+		sessAWS := openshiftcluster.AWSConfigSess(credPath, credAccount, region)
+		oc, err := openshiftcluster.NewClient(kubeConfigPath)
 		if err != nil {
 			log.Fatalf("Failed to get client, %v", err)
 		}
 		*dir = *dir + "winc-setup.json"
-		ec2_instances.CreateEC2WinC(sessAWS, oc, imageId, instanceType, keyName, dir)
+		aws.CreateWindowsVM(sessAWS, oc, imageId, instanceType, keyName, dir)
 	} else if os.Args[1] == "destroy" {
 		// subflags of destroy
 		credPath := destroyFlag.String("awscred", "", "Required: absolute path of aws credentials")
@@ -52,9 +58,9 @@ func main() {
 		if err != nil {
 			println("Please get help with 'destroy -h'.")
 		}
-		sessAWS := config.AWSConfigSess(credPath, credAccount, region)
+		sessAWS := openshiftcluster.AWSConfigSess(credPath, credAccount, region)
 		*dir = *dir + "winc-setup.json"
-		ec2_instances.DestroyEC2WinC(sessAWS, dir)
+		aws.DestroyWindowsVM(sessAWS, dir)
 	} else {
 		log.Fatal("Please use one argument either 'create' or 'destroy' a node")
 	}
