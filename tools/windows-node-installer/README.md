@@ -37,7 +37,7 @@ go build .
 ```
 Create a windows node:
 ```bash
-./winc-vm-setup create -awscred=/abs/path/to/your/aws/credentials -kubeconfig=/abs/path/to/your/kubeconfig
+./ create -awscred=/abs/path/to/your/aws/credentials -kubeconfig=/abs/path/to/your/kubeconfig
 ```
 Destroy the windows nodes created:
 ```bash

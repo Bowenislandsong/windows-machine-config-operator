@@ -1,4 +1,4 @@
-module github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup
+module github.com/openshift/windows-machine-config-operator/tools/windows-node-installer
 
 go 1.12
 

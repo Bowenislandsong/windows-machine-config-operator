@@ -2,10 +2,12 @@ package main
 
 import (
 	"flag"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/cloudprovider/aws"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/openshiftcluster"
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/cloudprovider"
 	"log"
 	"os"
+	
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/cloudprovider/aws"
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/openshiftcluster"
 )
 
 const (
@@ -40,8 +42,7 @@ func main() {
 		}
 
 		// Create node instance on selected platform
-		sessAWS := openshiftcluster.AWSConfigSess(credPath, credAccount, region)
-		oc, err := openshiftcluster.NewClient(kubeConfigPath)
+		cloudprovider.NewCloudSessionFactory()
 		if err != nil {
 			log.Fatalf("Failed to get client, %v", err)
 		}
