@@ -4,6 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
+	"os"
+	"strings"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	sessionaws "github.com/aws/aws-sdk-go/aws/session"
@@ -11,14 +17,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/iam"
 	v1 "github.com/openshift/api/config/v1"
 	client "github.com/openshift/client-go/config/clientset/versioned"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/cloudprovider"
-	file "github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/fileutil"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/openshiftcluster"
-	"io/ioutil"
-	"log"
-	"net/http"
-	"os"
-	"strings"
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/cloudprovider"
+	file "github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/fileutil"
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/openshiftcluster"
 )
 
 type InstancesInfo []InstanceInfo

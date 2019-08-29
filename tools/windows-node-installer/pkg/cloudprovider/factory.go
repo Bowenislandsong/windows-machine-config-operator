@@ -3,8 +3,8 @@ package cloudprovider
 import (
 	"fmt"
 	v1 "github.com/openshift/api/config/v1"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/cloudprovider/aws"
-	"github.com/openshift/windows-machine-config-operator/tools/winc-vm-setup/pkg/openshiftcluster"
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/cloudprovider/aws"
+	"github.com/openshift/windows-machine-config-operator/tools/windows-node-installer/pkg/openshiftcluster"
 )
 
 func NewCloudSessionFactory(kubeconfigPath, credentialPath, credAccount, dir *string) (Cloud, error) {
