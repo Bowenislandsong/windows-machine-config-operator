@@ -24,6 +24,10 @@ test-unit:
 build-tools:
 	$(GO_BUILD_ARGS) go build -o wni $(TOOLS_DIR)
 
+.PHONY: test-tools-e2e
+test-tools-e2e:
+	$(GO_BUILD_ARGS) go test $(TOOLS_DIR)/test/e2e/... -v
+
 .PHONY: verify-all
 # TODO: Add other verifications
 verify-all:
