@@ -31,7 +31,7 @@ func TestE2ECreatingAndDestroyingWindowsInstanceOnEC2(t *testing.T) {
 	dir := os.Getenv("ARTIFACT_DIR")
 
 	awsCloud, err := cloudprovider.CloudProviderFactory(kubeconfig, awscredentials, "default", dir,
-		"ami-06a4e829b8bbad61e", "m4.large", "libra")
+		"ami-0b8d82dea356226d3", "m4.large", "libra")
 	assert.NoError(t, err, "error creating clients")
 
 	// The e2e test assumes Microsoft Windows Server 2019 Base image, m4.large instance type, and libra sshkey are

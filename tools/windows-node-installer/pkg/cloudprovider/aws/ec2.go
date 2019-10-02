@@ -131,6 +131,20 @@ func (a *awsProvider) CreateWindowsVM() (rerr error) {
 	log.V(0).Info(fmt.Sprintf("Successfully created windows instance: %s, please RDP into the Windows instance.",
 		instanceID))
 
+	instance, err = a.updateInstance(instance)
+	if err != nil {
+		return fmt.Errorf("failed to update instance, %v", err)
+	}
+	ip, err := a.getInstanceIp(instance)
+	if err != nil {
+		return err
+	}
+	password, err := a.getInstancePassword(instance)
+	if err != nil {
+		return err
+	}
+	log.V(0).Info(fmt.Sprintf("IP: %s, Password: %s", ip, password))
+
 	return nil
 }
 
@@ -468,6 +482,41 @@ func (a *awsProvider) getIAMWorkerRole(infraID string) (*ec2.IamInstanceProfileS
 	return &ec2.IamInstanceProfileSpecification{
 		Arn: iamspc.InstanceProfile.Arn,
 	}, nil
+}
+
+func (a *awsProvider) updateInstance(instance *ec2.Instance) (*ec2.Instance, error) {
+	instances, err := a.EC2.DescribeInstances(&ec2.DescribeInstancesInput{
+		InstanceIds: []*string{instance.InstanceId},
+	})
+	if err != nil {
+		return nil, err
+	}
+	if len(instances.Reservations) < 1 || len(instances.Reservations[0].Instances) < 1 {
+		return nil, fmt.Errorf("no instance is found")
+	}
+	return instances.Reservations[0].Instances[0], nil
+}
+
+func (a *awsProvider) getInstanceIp(instance *ec2.Instance) (string, error) {
+	if instance.PublicIpAddress != nil {
+		return *instance.PublicIpAddress, nil
+	}
+	return "", fmt.Errorf("failed to get IP addreess")
+}
+
+func (a *awsProvider) getInstancePassword(instance *ec2.Instance) (string, error) {
+	passwordsInput := &ec2.GetPasswordDataInput{
+		InstanceId: instance.InstanceId,
+	}
+	err := a.EC2.WaitUntilPasswordDataAvailable(passwordsInput)
+	if err != nil {
+		return "", err
+	}
+	password, err := a.EC2.GetPasswordData(passwordsInput)
+	if err != nil {
+		return "", nil
+	}
+	return *password.PasswordData, nil
 }
 
 // isSGInUse checks if the security group is used by any existing instances and returns true only if it is certain
